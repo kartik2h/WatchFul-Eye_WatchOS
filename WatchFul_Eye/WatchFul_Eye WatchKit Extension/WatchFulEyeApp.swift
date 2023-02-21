@@ -6,6 +6,7 @@
 //
 import Foundation
 import SwiftUI
+import HealthKit
 
 @main
 struct WatchFulEyeApp: App {
@@ -21,39 +22,101 @@ struct WatchFulEyeApp: App {
         }
         WKNotificationScene(controller: NotificationController.self, category: "myCategory")
     }
-    
-    var callFunc = WatchFulEye().self
+    var callFunc = WatchFulEye()
 }
+
+
 
 public class WatchFulEye: ObservableObject {
     
+    private var healthStore = HKHealthStore()
+    @ObservedObject var heartRateMeasurementService = HeartRateMeasurementService()
+    var recordAudioService = RecordAudioService()
     
-    
-    var heartRateValue = HeartRateMeasurementService().currentHeartRate
-    var oxygenValue = HeartRateMeasurementService().currentOxygenSaturation
-    
+
     init() {
+            
+        autorizeHealthKit()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 20.0) {
-            self.apiCall(heartRate: self.heartRateValue, oxygen: self.oxygenValue)
-            print("init called")
+            let heartRateValue = self.heartRateMeasurementService.currentHeartRate
+            let oxygenValue = self.heartRateMeasurementService.currentOxygenSaturation
+            let hrvValue = self.heartRateMeasurementService.averageHRV
+            let audioLevelValue = self.heartRateMeasurementService.environmentalAudioExposure
+            
+            self.apiCall(heartRate: heartRateValue, oxygen: oxygenValue, hrv: hrvValue, audioLevel: audioLevelValue)
+            self.recordAudioService.requestPermissionAndStartRecording()
         }
     }
     
-    func apiCall(heartRate : Int, oxygen : Double){
+    func autorizeHealthKit() {
+
+        let heartRateSampleType = HKObjectType.quantityType(forIdentifier: .heartRate)!
+        let oxygenSaturationSampleType = HKObjectType.quantityType(forIdentifier: .oxygenSaturation)!
+        let hrvSampleType = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
+        let environmentalAudioExposureSampleType = HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)!
+        
+        healthStore.requestAuthorization(toShare: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType], read: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType]) { _, _ in }
+        
+//        code to run HealthKit in background
+//            let heartRateQuery = HKObserverQuery(sampleType: heartRateSampleType, predicate: nil) { (query, completionHandler, error) in
+//                if error != nil {
+//                    // Handle error
+//                    return
+//                }
+//                self.apiCall(heartRate: heart, oxygen: self.oxygenValue)
+//                // Handle updates
+//            }
+
+//            let oxygenSaturationQuery = HKObserverQuery(sampleType: oxygenSaturationSampleType, predicate: nil) { (query, completionHandler, error) in
+//                if error != nil {
+//                    // Handle error
+//                    return
+//                }
+//
+//                // Handle updates
+//            }
+        
+        //code to start receiving updates in the background
+    //        healthStore.execute(heartRateQuery)
+    //        healthStore.execute(oxygenSaturationQuery)
+
+        //code to stop receiving updates in the background
+    //        healthStore.stop(heartRateQuery)
+    //        healthStore.stop(oxygenSaturationQuery)
+
+    }
+    
+//    func scheduleHeartRateSample() {
+//        OperationQueue.async() {
+//                while true {
+//                    self.apiCall(heartRate: self.heartRateValue, oxygen: self.oxygenValue)
+//                    sleep(60)
+//                }
+//            }
+//        }
+    
+    func apiCall(heartRate : Int, oxygen : Double, hrv: Double, audioLevel: Double){
         
         print("function called")
         
         //code to send healthkit data to POST api
         let heartRateSample = heartRate
         let oxygenSaturationSample = oxygen
+        let hrvSample = hrv
+        let audioLevelSample = audioLevel
         
         print(heartRateSample)
         print(oxygenSaturationSample)
+        print(hrvSample)
+        print(audioLevelSample)
         
         //create a dictionary to store the sample data
         let sampleData: [String: Any] = [
             "heart_rate": heartRateSample,
-            "oxygen_saturation": oxygenSaturationSample
+            "oxygen_saturation": oxygenSaturationSample,
+            "hrv": hrvSample,
+            "audio_level": audioLevelSample
         ]
         
         //convert the dictionary to JSON data
@@ -61,7 +124,7 @@ public class WatchFulEye: ObservableObject {
         print("method called")
         
         //create the URLRequest with the POST API endpoint
-        var request = URLRequest(url: URL(string: "https://55yum95q3g.execute-api.us-east-2.amazonaws.com/data")!)
+        var request = URLRequest(url: URL(string: "https://dgkt1uyc90.execute-api.us-east-2.amazonaws.com/healthAPI")!)
         request.httpMethod = "POST"
         request.httpBody = jsonData
         

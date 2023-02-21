@@ -15,7 +15,7 @@ struct HRVLevelView: View {
     
     var body: some View {
         HStack(spacing: 8) {
-            Text(String(format: "%.2f", value))
+            Text(String(format: "%.1f", value))
                 .fontWeight(.medium)
                 .font(.system(size: 60))
             VStack {

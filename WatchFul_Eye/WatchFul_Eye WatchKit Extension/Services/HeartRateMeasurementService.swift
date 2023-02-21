@@ -14,7 +14,7 @@ class HeartRateMeasurementService: ObservableObject {
     let heartRateQuantity = HKUnit(from: "count/min")
     let oxygenSaturationUnit = HKUnit(from: "%")
     let hrvQuantityUnit = HKUnit(from: "ms")
-//    let environmentalAudioExposureUnit = HKUnit(from: "ms")
+    let environmentalAudioExposureUnit = HKUnit.decibelAWeightedSoundPressureLevel()
 
     @Published var currentHeartRate: Int = 0
     @Published var currentOxygenSaturation: Double = 0.0
@@ -25,91 +25,91 @@ class HeartRateMeasurementService: ObservableObject {
     @Published var maxHeartRate: Int = 0
     
     init() {
-        autorizeHealthKit()
+//        autorizeHealthKit()
         startQuery(quantityTypeIdentifier: .heartRate)
         startQuery(quantityTypeIdentifier: .oxygenSaturation)
         startQuery(quantityTypeIdentifier: .heartRateVariabilitySDNN)
         startQuery(quantityTypeIdentifier: .environmentalAudioExposure)
     }
     
-    func apiCall(heartRate : Int, oxygen : Double){
-        
-        //code to send healthkit data to POST api
-        let heartRateSample = heartRate
-        let oxygenSaturationSample = oxygen
-
-        //create a dictionary to store the sample data
-        let sampleData: [String: Any] = [
-            "heart_rate": heartRateSample,
-            "oxygen_saturation": oxygenSaturationSample
-        ]
-
-        //convert the dictionary to JSON data
-        let jsonData = try? JSONSerialization.data(withJSONObject: sampleData)
-        print("method called")
-
-        //create the URLRequest with the POST API endpoint
-        var request = URLRequest(url: URL(string: "https://55yum95q3g.execute-api.us-east-2.amazonaws.com/data")!)
-        request.httpMethod = "POST"
-        request.httpBody = jsonData
-
-        //send the request to the API
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                print("Error sending data to API: \(error)")
-                return
-            }
-            
-            //handle the response from the API
-            if let response = response as? HTTPURLResponse,
-                response.statusCode == 200 {
-                print("Data sent to API successfully")
-            }
-        }
-        task.resume()
-
-        
-    }
+//    func apiCall(heartRate : Int, oxygen : Double){
+//
+//        //code to send healthkit data to POST api
+//        let heartRateSample = heartRate
+//        let oxygenSaturationSample = oxygen
+//
+//        //create a dictionary to store the sample data
+//        let sampleData: [String: Any] = [
+//            "heart_rate": heartRateSample,
+//            "oxygen_saturation": oxygenSaturationSample
+//        ]
+//
+//        //convert the dictionary to JSON data
+//        let jsonData = try? JSONSerialization.data(withJSONObject: sampleData)
+//        print("method called")
+//
+//        //create the URLRequest with the POST API endpoint
+//        var request = URLRequest(url: URL(string: "https://55yum95q3g.execute-api.us-east-2.amazonaws.com/data")!)
+//        request.httpMethod = "POST"
+//        request.httpBody = jsonData
+//
+//        //send the request to the API
+//        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+//            if let error = error {
+//                print("Error sending data to API: \(error)")
+//                return
+//            }
+//
+//            //handle the response from the API
+//            if let response = response as? HTTPURLResponse,
+//                response.statusCode == 200 {
+//                print("Data sent to API successfully")
+//            }
+//        }
+//        task.resume()
+//
+//
+//    }
     
-    func autorizeHealthKit() {
-//        let healthKitTypes: Set = [
-//            HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)!, HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.oxygenSaturation)!]
-
-        let heartRateSampleType = HKObjectType.quantityType(forIdentifier: .heartRate)!
-        let oxygenSaturationSampleType = HKObjectType.quantityType(forIdentifier: .oxygenSaturation)!
-        let hrvSampleType = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
-        let environmentalAudioExposureSampleType = HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)!
-        
-        healthStore.requestAuthorization(toShare: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType], read: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType]) { _, _ in }
-        
-        //code to run HealthKit in background
-//        let heartRateQuery = HKObserverQuery(sampleType: heartRateSampleType, predicate: nil) { (query, completionHandler, error) in
-//            if error != nil {
-//                // Handle error
-//                return
-//            }
+//    func autorizeHealthKit() {
+////        let healthKitTypes: Set = [
+////            HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)!, HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.oxygenSaturation)!]
 //
-//            // Handle updates
-//        }
-
-//        let oxygenSaturationQuery = HKObserverQuery(sampleType: oxygenSaturationSampleType, predicate: nil) { (query, completionHandler, error) in
-//            if error != nil {
-//                // Handle error
-//                return
-//            }
+//        let heartRateSampleType = HKObjectType.quantityType(forIdentifier: .heartRate)!
+//        let oxygenSaturationSampleType = HKObjectType.quantityType(forIdentifier: .oxygenSaturation)!
+//        let hrvSampleType = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
+//        let environmentalAudioExposureSampleType = HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)!
 //
-//            // Handle updates
-//        }
-        
-        //code to start receiving updates in the background
-//        healthStore.execute(heartRateQuery)
-//        healthStore.execute(oxygenSaturationQuery)
-
-        //code to stop receiving updates in the background
-//        healthStore.stop(heartRateQuery)
-//        healthStore.stop(oxygenSaturationQuery)
-
-    }
+//        healthStore.requestAuthorization(toShare: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType], read: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType]) { _, _ in }
+//
+//        //code to run HealthKit in background
+////        let heartRateQuery = HKObserverQuery(sampleType: heartRateSampleType, predicate: nil) { (query, completionHandler, error) in
+////            if error != nil {
+////                // Handle error
+////                return
+////            }
+////
+////            // Handle updates
+////        }
+//
+////        let oxygenSaturationQuery = HKObserverQuery(sampleType: oxygenSaturationSampleType, predicate: nil) { (query, completionHandler, error) in
+////            if error != nil {
+////                // Handle error
+////                return
+////            }
+////
+////            // Handle updates
+////        }
+//
+//        //code to start receiving updates in the background
+////        healthStore.execute(heartRateQuery)
+////        healthStore.execute(oxygenSaturationQuery)
+//
+//        //code to stop receiving updates in the background
+////        healthStore.stop(heartRateQuery)
+////        healthStore.stop(oxygenSaturationQuery)
+//
+//    }
     
     private func startQuery(quantityTypeIdentifier: HKQuantityTypeIdentifier) {
         
@@ -155,16 +155,15 @@ class HeartRateMeasurementService: ObservableObject {
             if type == .heartRateVariabilitySDNN {
                     let hrv = sample.quantity.doubleValue(for: hrvQuantityUnit)
                     DispatchQueue.main.async {
-                    self.averageHRV = hrv
+                        self.averageHRV = hrv
                     }
                     hrvSamples.append(hrv)
             }
             
             if type == .environmentalAudioExposure {
-//                    let audio = sample.quantity.doubleValue(for: hrvQuantityUnit)
-                let audio = 80.0
+                let audio = sample.quantity.doubleValue(for: environmentalAudioExposureUnit)
                     DispatchQueue.main.async {
-                        self.environmentalAudioExposure = audio
+                    self.environmentalAudioExposure = audio
                 }
             }
 
