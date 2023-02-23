@@ -48,25 +48,28 @@ class RecordAudioService: NSObject, AVAudioRecorderDelegate {
                 AVFormatIDKey: Int(kAudioFormatLinearPCM),
                 AVSampleRateKey: 44100,
                 AVNumberOfChannelsKey: 2,
-                AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue
+                AVEncoderAudioQualityKey: AVAudioQuality.min.rawValue
             ]
             audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
             audioRecorder?.delegate = self
-            audioRecorder?.record(forDuration: 30.0)
+            audioRecorder?.record(forDuration: 5.0)
             print("Recording started")
         } catch {
             print("Error starting recording: \(error.localizedDescription)")
         }
     }
 
+
     @objc func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        if flag {
-            print("Recording finished")
-            print("Recording saved to: \(audioRecorder?.url.path)")
-        } else {
-            print("Recording failed")
-        }
-    }
+           if flag {
+               print("Recording finished")
+               sendRecordedAudio(audioUrl: audioRecorder!.url, apiUrl: URL(string: "https://8944g8jrna.execute-api.us-east-2.amazonaws.com/audioAPI/audioProcessing")!)
+               print("Recording saved to: \(audioRecorder?.url.path)")
+               print("Recording saved to: \(audioRecorder?.url)")
+           } else {
+               print("Recording failed")
+           }
+       }
 
     func stopRecording() {
         audioRecorder?.stop()
@@ -77,6 +80,97 @@ class RecordAudioService: NSObject, AVAudioRecorderDelegate {
             print("Error stopping recording: \(error.localizedDescription)")
         }
     }
+    
+    func sendRecordedAudio(audioUrl: URL, apiUrl: URL) {
+        let audioData = try! Data(contentsOf: audioUrl)
+        let boundary = "Boundary-\(UUID().uuidString)"
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "POST"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        let body = NSMutableData()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"audio\"; filename=\"recording.wav\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: audio/wav\r\n\r\n".data(using: .utf8)!)
+        body.append(audioData)
+        body.append("\r\n".data(using: .utf8)!)
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        request.httpBody = body as Data
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error sending audio: \(error.localizedDescription)")
+                return
+            }
+            if let response = response as? HTTPURLResponse, response.statusCode != 200 {
+                print("Unexpected status code: \(response.statusCode)")
+                return
+            }
+            if let data = data {
+                print("Audio sent successfully")
+                print("Server response: \(String(data: data, encoding: .utf8) ?? "N/A")")
+            }
+        }
+        task.resume()
+    }
+
+//    func compressAudioFile(audioUrl: URL) -> URL {
+//        let asset = AVURLAsset(url: audioUrl)
+//        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetMediumQuality)!
+//        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+//        let compressedAudioFilename = "compressed_\(audioUrl.lastPathComponent)"
+//        let compressedAudioUrl = URL(fileURLWithPath: documentsPath).appendingPathComponent(compressedAudioFilename)
+//
+//        exportSession.outputURL = compressedAudioUrl
+//        exportSession.outputFileType = AVFileType.m4a
+//
+//        let startTime = CMTime(seconds: 0, preferredTimescale: 1000)
+//        let endTime = CMTime(seconds: asset.duration.seconds, preferredTimescale: 1000)
+//        let timeRange = CMTimeRange(start: startTime, end: endTime)
+//        exportSession.timeRange = timeRange
+//
+//        let group = DispatchGroup()
+//        group.enter()
+//
+//        exportSession.exportAsynchronously {
+//            switch exportSession.status {
+//            case .completed:
+//                print("Compression succeeded: \(compressedAudioUrl.path)")
+//            case .cancelled:
+//                print("Compression cancelled")
+//            case .failed:
+//                print("Compression failed: \(exportSession.error?.localizedDescription ?? "N/A")")
+//            default:
+//                break
+//            }
+//            group.leave()
+//        }
+//
+//        group.wait()
+//
+//        return compressedAudioUrl
+//    }
+
+    
+//    func compressAudioFile(_ audioUrl: URL) -> URL {
+//        let outputUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("compressed.m4a")
+//        let audioFile = try! AVAudioFile(forReading: audioUrl)
+//        let audioFormat = audioFile.processingFormat
+//        let audioFrameCount = UInt32(audioFile.length)
+//        let audioFileBuffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: audioFrameCount)!
+//        try! audioFile.read(into: audioFileBuffer)
+//        let audioConverter = AVAudioConverter(from: audioFormat, to: AVAudioFormat.init(commonFormat: .pcmFormatFloat32, sampleRate: 44100, channels: 1, interleaved: true)!)
+//        let outputFormat = audioConverter.outputFormat(for: audioFileBuffer.format)
+//        let audioConverterBuffer = AVAudioCompressedBuffer(format: audioConverter!.outputFormat(for: audioFileBuffer.format), packetCapacity: audioFrameCount / 16, maximumPacketSize: 0)
+//        var error: NSError?
+//        audioConverter!.convert(to: audioConverterBuffer, error: &error) { (inputPacketCount, outStatus) -> AVAudioBuffer? in
+//            if outStatus.pointee != .haveData {
+//                return nil
+//            }
+//            return audioFileBuffer
+//        }
+//        try! audioConverterBuffer.dataRepresentation().write(to: outputUrl)
+//        return outputUrl
+//    }
     
 //    func startRecording() {
 //        let audioFilename = getDocumentsDirectory().appendingPathComponent("recording.wav")
@@ -123,7 +217,7 @@ class RecordAudioService: NSObject, AVAudioRecorderDelegate {
 //        let documentsDirectory = paths[0]
 //        return documentsDirectory
 //    }
-//    
+//
 //    init() {
 //        // Start recording automatically when initializing the AudioRecorder instance
 //        requestPermissionAndStartRecording()

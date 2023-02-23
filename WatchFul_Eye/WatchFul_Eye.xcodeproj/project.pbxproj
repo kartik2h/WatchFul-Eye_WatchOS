@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0814C7B529A4794000AD33E1 /* RecordAudioAWSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0814C7B429A4794000AD33E1 /* RecordAudioAWSService.swift */; };
 		081B996029973BC4001C00DA /* OxygenSaturationMeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081B995F29973BC4001C00DA /* OxygenSaturationMeasurementView.swift */; };
 		081B996229973F57001C00DA /* OxygenLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081B996129973F57001C00DA /* OxygenLevelView.swift */; };
 		081E2BD029998C5700ED5BDF /* AudioLevelMeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081E2BCF29998C5700ED5BDF /* AudioLevelMeasurementView.swift */; };
@@ -14,6 +15,7 @@
 		083B2A9F2998412B007227B8 /* HRVMeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083B2A9E2998412B007227B8 /* HRVMeasurementView.swift */; };
 		083B2AA129984188007227B8 /* HRVLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083B2AA029984188007227B8 /* HRVLevelView.swift */; };
 		0871A277299AEAB000C08F77 /* RecordAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0871A276299AEAB000C08F77 /* RecordAudioService.swift */; };
+		089EFA4429A5591C00A9B44F /* VitalsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089EFA4329A5591C00A9B44F /* VitalsModel.swift */; };
 		1A453E4525C1F7140004FF93 /* WatchFul_Eye WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1A453E4425C1F7140004FF93 /* WatchFul_Eye WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1A453E4A25C1F7150004FF93 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A453E4925C1F7150004FF93 /* Assets.xcassets */; };
 		1A453E5625C1F7160004FF93 /* WatchFulEyeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A453E5525C1F7160004FF93 /* WatchFulEyeApp.swift */; };
@@ -64,6 +66,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0814C7B429A4794000AD33E1 /* RecordAudioAWSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordAudioAWSService.swift; sourceTree = "<group>"; };
 		081B995F29973BC4001C00DA /* OxygenSaturationMeasurementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxygenSaturationMeasurementView.swift; sourceTree = "<group>"; };
 		081B996129973F57001C00DA /* OxygenLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OxygenLevelView.swift; sourceTree = "<group>"; };
 		081E2BCF29998C5700ED5BDF /* AudioLevelMeasurementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevelMeasurementView.swift; sourceTree = "<group>"; };
@@ -71,6 +74,7 @@
 		083B2A9E2998412B007227B8 /* HRVMeasurementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HRVMeasurementView.swift; path = "WatchFul_Eye WatchKit Extension/Views/HRVMeasurementView.swift"; sourceTree = SOURCE_ROOT; };
 		083B2AA029984188007227B8 /* HRVLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRVLevelView.swift; sourceTree = "<group>"; };
 		0871A276299AEAB000C08F77 /* RecordAudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordAudioService.swift; sourceTree = "<group>"; };
+		089EFA4329A5591C00A9B44F /* VitalsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalsModel.swift; sourceTree = "<group>"; };
 		1A453E4025C1F7130004FF93 /* WatchFul_Eye.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchFul_Eye.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A453E4425C1F7140004FF93 /* WatchFul_Eye WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchFul_Eye WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A453E4925C1F7150004FF93 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -189,6 +193,8 @@
 			children = (
 				1A7BD4E425C1FF430036EACB /* HeartRateMeasurementService.swift */,
 				0871A276299AEAB000C08F77 /* RecordAudioService.swift */,
+				0814C7B429A4794000AD33E1 /* RecordAudioAWSService.swift */,
+				089EFA4329A5591C00A9B44F /* VitalsModel.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -316,10 +322,12 @@
 				081B996029973BC4001C00DA /* OxygenSaturationMeasurementView.swift in Sources */,
 				083B2AA129984188007227B8 /* HRVLevelView.swift in Sources */,
 				081E2BD229998D1700ED5BDF /* AudioLevelView.swift in Sources */,
+				0814C7B529A4794000AD33E1 /* RecordAudioAWSService.swift in Sources */,
 				1A453E5C25C1F7160004FF93 /* NotificationView.swift in Sources */,
 				1A7BD4E525C1FF440036EACB /* HeartRateMeasurementService.swift in Sources */,
 				0871A277299AEAB000C08F77 /* RecordAudioService.swift in Sources */,
 				081B996229973F57001C00DA /* OxygenLevelView.swift in Sources */,
+				089EFA4429A5591C00A9B44F /* VitalsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

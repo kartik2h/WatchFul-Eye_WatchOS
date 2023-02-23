@@ -21,7 +21,7 @@ class HeartRateMeasurementService: ObservableObject {
     @Published var averageHRV: Double = 0.0
     @Published var environmentalAudioExposure: Double = 0.0
 
-    @Published var minHeartRate: Int = -1
+    @Published var minHeartRate: Int = 0
     @Published var maxHeartRate: Int = 0
     
     init() {
@@ -72,8 +72,8 @@ class HeartRateMeasurementService: ObservableObject {
 //    }
     
 //    func autorizeHealthKit() {
-////        let healthKitTypes: Set = [
-////            HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)!, HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.oxygenSaturation)!]
+//        let healthKitTypes: Set = [
+//            HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)!, HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.oxygenSaturation)!]
 //
 //        let heartRateSampleType = HKObjectType.quantityType(forIdentifier: .heartRate)!
 //        let oxygenSaturationSampleType = HKObjectType.quantityType(forIdentifier: .oxygenSaturation)!
@@ -83,31 +83,31 @@ class HeartRateMeasurementService: ObservableObject {
 //        healthStore.requestAuthorization(toShare: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType], read: [heartRateSampleType, oxygenSaturationSampleType, hrvSampleType, environmentalAudioExposureSampleType]) { _, _ in }
 //
 //        //code to run HealthKit in background
-////        let heartRateQuery = HKObserverQuery(sampleType: heartRateSampleType, predicate: nil) { (query, completionHandler, error) in
-////            if error != nil {
-////                // Handle error
-////                return
-////            }
-////
-////            // Handle updates
-////        }
+//        let heartRateQuery = HKObserverQuery(sampleType: heartRateSampleType, predicate: nil) { (query, completionHandler, error) in
+//            if error != nil {
+//                // Handle error
+//                return
+//            }
 //
-////        let oxygenSaturationQuery = HKObserverQuery(sampleType: oxygenSaturationSampleType, predicate: nil) { (query, completionHandler, error) in
-////            if error != nil {
-////                // Handle error
-////                return
-////            }
-////
-////            // Handle updates
-////        }
+//            // Handle updates
+//        }
+//
+//        let oxygenSaturationQuery = HKObserverQuery(sampleType: oxygenSaturationSampleType, predicate: nil) { (query, completionHandler, error) in
+//            if error != nil {
+//                // Handle error
+//                return
+//            }
+//
+//            // Handle updates
+//        }
 //
 //        //code to start receiving updates in the background
-////        healthStore.execute(heartRateQuery)
-////        healthStore.execute(oxygenSaturationQuery)
+//        healthStore.execute(heartRateQuery)
+//        healthStore.execute(oxygenSaturationQuery)
 //
 //        //code to stop receiving updates in the background
-////        healthStore.stop(heartRateQuery)
-////        healthStore.stop(oxygenSaturationQuery)
+//        healthStore.stop(heartRateQuery)
+//        healthStore.stop(oxygenSaturationQuery)
 //
 //    }
     

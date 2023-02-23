@@ -38,13 +38,13 @@ public class WatchFulEye: ObservableObject {
             
         autorizeHealthKit()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 20.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
             let heartRateValue = self.heartRateMeasurementService.currentHeartRate
             let oxygenValue = self.heartRateMeasurementService.currentOxygenSaturation
             let hrvValue = self.heartRateMeasurementService.averageHRV
             let audioLevelValue = self.heartRateMeasurementService.environmentalAudioExposure
             
-            self.apiCall(heartRate: heartRateValue, oxygen: oxygenValue, hrv: hrvValue, audioLevel: audioLevelValue)
+            self.startApiCalls(heartRate: heartRateValue, oxygen: oxygenValue, hrv: hrvValue, audioLevel: audioLevelValue)
             self.recordAudioService.requestPermissionAndStartRecording()
         }
     }
@@ -96,27 +96,37 @@ public class WatchFulEye: ObservableObject {
 //            }
 //        }
     
+    func startApiCalls(heartRate : Int, oxygen : Double, hrv: Double, audioLevel: Double) {
+        // Schedule the apiCall method to be called every 1 minute
+        Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { _ in
+            // Call the apiCall method with some sample data
+            self.apiCall(heartRate: heartRate, oxygen: oxygen, hrv: hrv, audioLevel: audioLevel)
+        }
+    }
+    
     func apiCall(heartRate : Int, oxygen : Double, hrv: Double, audioLevel: Double){
         
         print("function called")
         
-        //code to send healthkit data to POST api
-        let heartRateSample = heartRate
-        let oxygenSaturationSample = oxygen
-        let hrvSample = hrv
-        let audioLevelSample = audioLevel
+        let vitals = VitalsModel()
         
-        print(heartRateSample)
-        print(oxygenSaturationSample)
-        print(hrvSample)
-        print(audioLevelSample)
+        //code to send healthkit data to POST api
+        vitals.heartRate = heartRate
+        vitals.oxygen = oxygen
+        vitals.hrv = hrv
+        vitals.audioLevel = audioLevel
+        
+        print(vitals.heartRate)
+        print(vitals.oxygen)
+        print(vitals.hrv)
+        print(vitals.audioLevel)
         
         //create a dictionary to store the sample data
         let sampleData: [String: Any] = [
-            "heart_rate": heartRateSample,
-            "oxygen_saturation": oxygenSaturationSample,
-            "hrv": hrvSample,
-            "audio_level": audioLevelSample
+            "heart_rate": vitals.heartRate,
+            "oxygen_saturation": vitals.oxygen,
+            "hrv": vitals.hrv,
+            "audio_level": vitals.audioLevel
         ]
         
         //convert the dictionary to JSON data
