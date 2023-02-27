@@ -63,9 +63,9 @@ class RecordAudioService: NSObject, AVAudioRecorderDelegate {
     @objc func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
            if flag {
                print("Recording finished")
-               sendRecordedAudio(audioUrl: audioRecorder!.url, apiUrl: URL(string: "https://8944g8jrna.execute-api.us-east-2.amazonaws.com/audioAPI/audioProcessing")!)
-               print("Recording saved to: \(audioRecorder?.url.path)")
-               print("Recording saved to: \(audioRecorder?.url)")
+               sendRecordedAudio(audioUrl: audioRecorder!.url, apiUrl: URL(string: "https://d1kjsyj59j.execute-api.us-east-2.amazonaws.com/dev/sendaudio")!)
+//               print("Recording saved to: \(audioRecorder?.url.path)")
+//               print("Recording saved to: \(audioRecorder?.url)")
            } else {
                print("Recording failed")
            }
@@ -86,6 +86,7 @@ class RecordAudioService: NSObject, AVAudioRecorderDelegate {
         let boundary = "Boundary-\(UUID().uuidString)"
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "POST"
+        request.httpBody = audioData
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         let body = NSMutableData()
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
@@ -94,7 +95,7 @@ class RecordAudioService: NSObject, AVAudioRecorderDelegate {
         body.append(audioData)
         body.append("\r\n".data(using: .utf8)!)
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        request.httpBody = body as Data
+//        request.httpBody = body as Data
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
