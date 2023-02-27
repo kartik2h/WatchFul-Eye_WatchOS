@@ -15,7 +15,7 @@ struct AudioLevelMeasurementView: View {
         VStack {
             Text("Environmental Audio Exposure")
                 .font(.headline)
-            AudioLevelView(value: 65.0)
+            AudioLevelView(value: heartRateMeasurementService.environmentalAudioExposure)
             if heartRateMeasurementService.environmentalAudioExposure > 85 {
                 Text("Too loud!\n🔊")
                     .multilineTextAlignment(.center)
