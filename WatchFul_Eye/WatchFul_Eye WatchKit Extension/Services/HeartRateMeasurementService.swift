@@ -2,7 +2,7 @@
 //  HeartRateMeasurementService.swift
 //  HeartRate WatchKit Extension
 //
-//  Created by Anastasia Ryabenko on 27.01.2021.
+//  Created by Megh Patel
 //
 
 
@@ -51,7 +51,61 @@ class HeartRateMeasurementService: ObservableObject {
             let audioService = RecordAudioService()
             
             self.startApiCalls(heartRate: heartRateValue, oxygen: oxygenValue, hrv: hrvValue, audioLevel: audioLevelValue)
-            audioService.requestPermissionAndStartRecording()
+            
+            var flag = true
+
+            if ((oxygenValue >= 95 && oxygenValue <= 100) && (hrvValue > 50 && hrvValue < 105) || (heartRateValue > 60 && heartRateValue < 110)) {
+                flag = false
+            } else {
+                flag = true
+            }
+
+            if ((oxygenValue >= 95 && oxygenValue <= 100) && (hrvValue > 50 && hrvValue < 105) || (heartRateValue < 60 || heartRateValue > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValue >= 95 && oxygenValue <= 100) && (hrvValue < 50 || hrvValue > 105) || (heartRateValue > 60 && heartRateValue < 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValue >= 95 && oxygenValue <= 100) && (hrvValue < 50 || hrvValue > 105) || (heartRateValue < 60 || heartRateValue > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValue < 95 || oxygenValue > 100) || (hrvValue > 50 && hrvValue < 105) || (heartRateValue > 60 && heartRateValue < 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValue < 95 || oxygenValue > 100) || (hrvValue > 50 && hrvValue < 105) || (heartRateValue < 60 || heartRateValue > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValue < 95 || oxygenValue > 100) || (hrvValue < 50 || hrvValue > 105) || (heartRateValue > 60 && heartRateValue < 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValue < 95 || oxygenValue > 100) || (hrvValue < 50 || hrvValue > 105) || (heartRateValue < 60 || heartRateValue > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if(flag){
+                audioService.requestRecordingPermission()
+            }
+            
         }
     }
     
@@ -63,6 +117,8 @@ class HeartRateMeasurementService: ObservableObject {
         self.startQuery(quantityTypeIdentifier: .oxygenSaturation)
         self.startQuery(quantityTypeIdentifier: .heartRateVariabilitySDNN)
         self.startQuery(quantityTypeIdentifier: .environmentalAudioExposure)
+        
+        let audioService = RecordAudioService()
         
         Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { _ in
             // Call the apiCall method with some sample data
@@ -79,6 +135,60 @@ class HeartRateMeasurementService: ObservableObject {
             let audioLevelValueFunc = self.environmentalAudioExposure
             
             self.apiCall(heartRate: heartRateValueFunc, oxygen: oxygenValueFunc, hrv: hrvValueFunc, audioLevel: audioLevelValueFunc)
+            
+            var flag = true
+
+            if ((oxygenValueFunc >= 95 && oxygenValueFunc <= 100) && (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
+                flag = false
+            } else {
+                flag = true
+            }
+
+            if ((oxygenValueFunc >= 95 && oxygenValueFunc <= 100) && (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValueFunc >= 95 && oxygenValueFunc <= 100) && (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValueFunc >= 95 && oxygenValueFunc <= 100) && (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
+                flag = true
+            } else {
+                flag = false
+            }
+
+            if(flag){
+                audioService.requestRecordingPermission()
+            }
         }
     }
     
