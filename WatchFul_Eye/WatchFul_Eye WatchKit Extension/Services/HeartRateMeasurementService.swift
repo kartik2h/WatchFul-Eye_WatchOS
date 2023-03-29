@@ -44,13 +44,14 @@ class HeartRateMeasurementService: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
                                     
             let heartRateValue = self.currentHeartRate
-            let oxygenValue = self.currentOxygenSaturation
+            let oxygenValue = self.currentOxygenSaturation 
             let hrvValue = self.averageHRV
             let audioLevelValue = self.environmentalAudioExposure
             
             let audioService = RecordAudioService()
             
             self.startApiCalls(heartRate: heartRateValue, oxygen: oxygenValue, hrv: hrvValue, audioLevel: audioLevelValue)
+            audioService.requestRecordingPermission()
             
             var flag = true
 

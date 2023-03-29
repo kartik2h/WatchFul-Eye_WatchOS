@@ -81,9 +81,13 @@ class RecordAudioService: NSObject, AVAudioRecorderDelegate {
             return
         }
 
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMddHHmmss"
+        let dateString = formatter.string(from: Date())
+        
         // Set up the request
         let bucketName = "storeaudiofiles-watchfuleye"
-        let fileName = "recording.wav"
+        let fileName = "\(dateString)_recording.wav"
         let url = URL(string: "https://1mj1i5c19c.execute-api.us-east-2.amazonaws.com/dev/\(bucketName)/\(fileName)")!
         
         var request = URLRequest(url: url)
