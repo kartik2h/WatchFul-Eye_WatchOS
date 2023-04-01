@@ -41,7 +41,7 @@ class HeartRateMeasurementService: ObservableObject {
         startQuery(quantityTypeIdentifier: .heartRateVariabilitySDNN)
         startQuery(quantityTypeIdentifier: .environmentalAudioExposure)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                                     
             let heartRateValue = self.currentHeartRate
             let oxygenValue = self.currentOxygenSaturation 
@@ -163,33 +163,33 @@ class HeartRateMeasurementService: ObservableObject {
                 flag = false
             }
 
-            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
+            if ((oxygenValueFunc < 95 || oxygenValueFunc >= 100) || (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
                 flag = true
             } else {
                 flag = false
             }
 
-            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
+            if ((oxygenValueFunc < 95 || oxygenValueFunc >= 100) || (hrvValueFunc > 50 && hrvValueFunc < 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
                 flag = true
             } else {
                 flag = false
             }
 
-            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
+            if ((oxygenValueFunc < 95 || oxygenValueFunc >= 100) || (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc > 60 && heartRateValueFunc < 110)) {
                 flag = true
             } else {
                 flag = false
             }
 
-            if ((oxygenValueFunc < 95 || oxygenValueFunc > 100) || (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
+            if ((oxygenValueFunc < 95 || oxygenValueFunc >= 100) || (hrvValueFunc < 50 || hrvValueFunc > 105) || (heartRateValueFunc < 60 || heartRateValueFunc > 110)) {
                 flag = true
             } else {
                 flag = false
             }
 
-            if(flag){
-                audioService.requestRecordingPermission()
-            }
+//            if(flag){
+//                audioService.requestRecordingPermission()
+//            }
         }
     }
     
